@@ -1,0 +1,20 @@
+body {
+	font-family: "sans-serif";
+}
+
+.schedule {
+	display: grid;
+	grid-template-columns: 3;
+}
+
+.stop-name {
+	grid-column: 1;
+}
+
+.stop-arr {
+	grid-column: 2;
+}
+
+.stop-dep {
+	grid-column: 3;
+}

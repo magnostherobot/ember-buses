@@ -13,8 +13,9 @@ function todo(description = "Unimplemented feature") {
 
 const $ = (...args) => document.getElementById(...args);
 
-async function get(url) {
-	const response = await fetch(url);
+async function get(url, params) {
+	const paramStr = params ? `?${new URLSearchParams(params)}` : "";
+	const response = await fetch(`${url}${paramStr}`);
 	if (!response.ok) throw new Error(response);
 	return response.json();
 }
@@ -24,7 +25,6 @@ function getTripID() {
 }
 
 function createLegLink(leg) {
-	console.log(leg);
 	const time = dayjs(leg.departure.scheduled).format("HH:mm");
 	const text = document.createTextNode(
 		`${time} ${leg.origin.detailed_name} to ${leg.destination.detailed_name}`,
@@ -42,17 +42,47 @@ async function showTripSelection() {
 	const div = $("main");
 
 	for (const quote of quotes.quotes) {
-		console.log(quote);
 		for (const leg of quote.legs) {
 			div.appendChild(createLegLink(leg));
 		}
 	}
 }
 
+function formatDate(date) {
+	return dayjs(date).format("HH:mm");
+}
+
+function div(content = [], classes = []) {
+	const result = document.createElement("div");
+	content.forEach((element) => result.appendChild(element));
+	result.classList.add(...classes);
+	return result;
+}
+
+function divText(text, classes) {
+	return div([document.createTextNode(text)], classes);
+}
+
+function stopInfo(stop) {
+	return [
+		divText(stop.location.detailed_name, ["stop-name"]),
+		divText(formatDate(stop.arrival.scheduled), ["stop-arr"]),
+		divText(formatDate(stop.departure.scheduled), ["stop-dep"]),
+	];
+}
+
+function scheduleInfo(route) {
+	return div(route.flatMap(stopInfo), ["schedule"]);
+}
+
 async function showTripInfo(tripID) {
-	const data = await get(`https://api.ember.to/v1/trips/${tripID}/`);
+	const data = await get(`https://api.ember.to/v1/trips/${tripID}/`, {
+		all: true,
+	});
+
 	console.log(data);
-	console.log(data.route.map((stop) => stop.location.name).join("\n"));
+
+	$("main").appendChild(scheduleInfo(data.route));
 }
 
 async function main() {
