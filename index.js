@@ -24,8 +24,10 @@ function getTripID() {
 }
 
 function createLegLink(leg) {
+	console.log(leg);
+	const time = dayjs(leg.departure.scheduled).format("HH:mm");
 	const text = document.createTextNode(
-		`${leg.origin.detailed_name} to ${leg.destination.detailed_name}`,
+		`${time} ${leg.origin.detailed_name} to ${leg.destination.detailed_name}`,
 	);
 	const p = document.createElement("p");
 	const link = document.createElement("a");
@@ -42,9 +44,6 @@ async function showTripSelection() {
 	for (const quote of quotes.quotes) {
 		console.log(quote);
 		for (const leg of quote.legs) {
-			console.log(leg);
-			console.log(leg.trip_uid);
-
 			div.appendChild(createLegLink(leg));
 		}
 	}
