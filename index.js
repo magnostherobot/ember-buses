@@ -69,12 +69,12 @@ function stopInfo(stop) {
 			? divText(formatDate(x.actual), [...cs, "estimated", "actual"])
 			: x.expected
 				? divText(formatDate(x.expected), [...cs, "estimated", "expected"])
-				: divText("-", [...cs, "estimated"]);
+				: divText("—", [...cs, "estimated"]);
 
 	return [
 		divText(stop.location.detailed_name, ["stop-name"]),
-		divText(formatDate(stop.arrival.scheduled), ["stop-arr"]),
-		divText(formatDate(stop.departure.scheduled), ["stop-dep"]),
+		divText(formatDate(stop.arrival.scheduled), ["stop-arr", "scheduled"]),
+		divText(formatDate(stop.departure.scheduled), ["stop-dep", "scheduled"]),
 		op(stop.arrival, ["stop-arr"]),
 		op(stop.departure, ["stop-dep"]),
 	];
@@ -83,10 +83,10 @@ function stopInfo(stop) {
 function scheduleHeaderRows() {
 	return [
 		divText("Scheduled", ["header-row-1", "scheduled"]),
-		divText("Actual", ["header-row-1", "actual"]),
+		divText("Actual", ["header-row-1", "estimated", "actual"]),
 		divText("Stop Name", ["stop-name", "header-row-2"]),
-		divText("Arr.", ["stop-arr", "header-row-2"]),
-		divText("Dep.", ["stop-dep", "header-row-2"]),
+		divText("Arr.", ["stop-arr", "header-row-2", "scheduled"]),
+		divText("Dep.", ["stop-dep", "header-row-2", "scheduled"]),
 		divText("Arr.", ["stop-arr", "header-row-2", "estimated"]),
 		divText("Dep.", ["stop-dep", "header-row-2", "estimated"]),
 	];
