@@ -97,13 +97,17 @@ function scheduleInfo(route) {
 	return div(rows, ["schedule"]);
 }
 
-function scheduleTitle(route) {
+function scheduleTitle(bus, route) {
 	const regions = route.map((stop) => stop.location.region_name);
 	const time = formatDate(route[0].arrival.scheduled);
 	const title = `${time} ${regions.at(0)} to ${regions.at(-1)}`;
 	const h1 = document.createElement("h1");
 	h1.appendChild(document.createTextNode(title));
-	return h1;
+
+	const updateNote = divText(`Updated at ${formatDate(bus.gps.last_updated)}`, [
+		"last-updated",
+	]);
+	return div([h1, updateNote]);
 }
 
 function busMap(bus, route) {
@@ -152,7 +156,7 @@ async function showTripInfo(tripID) {
 
 	console.log(data);
 
-	$("main").appendChild(scheduleTitle(data.route));
+	$("main").appendChild(scheduleTitle(data.vehicle, data.route));
 	$("main").appendChild(busMap(data.vehicle, data.route));
 	$("main").appendChild(scheduleInfo(data.route));
 }

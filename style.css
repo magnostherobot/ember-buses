@@ -8,6 +8,11 @@ body {
 
 h1 {
 	color: #284940;
+	margin-bottom: 0;
+}
+
+.last-updated {
+	font-style: oblique;
 }
 
 #map {
