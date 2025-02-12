@@ -64,15 +64,37 @@ function divText(text, classes) {
 }
 
 function stopInfo(stop) {
+	const op = (x, cs) =>
+		x.actual
+			? divText(formatDate(x.actual), [...cs, "estimated", "actual"])
+			: x.expected
+				? divText(formatDate(x.expected), [...cs, "estimated", "expected"])
+				: divText("-", [...cs, "estimated"]);
+
 	return [
 		divText(stop.location.detailed_name, ["stop-name"]),
 		divText(formatDate(stop.arrival.scheduled), ["stop-arr"]),
 		divText(formatDate(stop.departure.scheduled), ["stop-dep"]),
+		op(stop.arrival, ["stop-arr"]),
+		op(stop.departure, ["stop-dep"]),
+	];
+}
+
+function scheduleHeaderRows() {
+	return [
+		divText("Scheduled", ["header-row-1", "scheduled"]),
+		divText("Actual", ["header-row-1", "actual"]),
+		divText("Stop Name", ["stop-name", "header-row-2"]),
+		divText("Arr.", ["stop-arr", "header-row-2"]),
+		divText("Dep.", ["stop-dep", "header-row-2"]),
+		divText("Arr.", ["stop-arr", "header-row-2", "estimated"]),
+		divText("Dep.", ["stop-dep", "header-row-2", "estimated"]),
 	];
 }
 
 function scheduleInfo(route) {
-	return div(route.flatMap(stopInfo), ["schedule"]);
+	const rows = [...scheduleHeaderRows(), ...route.flatMap(stopInfo)];
+	return div(rows, ["schedule"]);
 }
 
 async function showTripInfo(tripID) {

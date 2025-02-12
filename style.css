@@ -4,7 +4,23 @@ body {
 
 .schedule {
 	display: grid;
-	grid-template-columns: 3;
+	grid-template-columns: 5;
+}
+
+.schedule .header-row-1.scheduled {
+	grid-column: 2 / span 2;
+	text-align: center;
+	font-weight: bold;
+}
+
+.schedule .header-row-1.actual {
+	grid-column: 4 / span 2;
+	text-align: center;
+	font-weight: bold;
+}
+
+.schedule .header-row-2 {
+	font-weight: bold;
 }
 
 .stop-name {
@@ -12,9 +28,19 @@ body {
 }
 
 .stop-arr {
+	text-align: center;
 	grid-column: 2;
 }
 
 .stop-dep {
+	text-align: center;
 	grid-column: 3;
+}
+
+.stop-arr.estimated {
+	grid-column: 4;
+}
+
+.stop-dep.estimated {
+	grid-column: 5;
 }
