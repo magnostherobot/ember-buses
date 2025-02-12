@@ -156,6 +156,12 @@ async function showTripInfo(tripID) {
 
 	console.log(data);
 
+	// Filter out stops that don't allow getting on or off
+	// (we don't want to show depot stops at the start/end of the trip).
+	const route = data.route.filter(
+		(stop) => stop.allow_boarding || stop.allow_drop_off,
+	);
+
 	$("main").appendChild(scheduleTitle(data.vehicle, data.route));
 	$("main").appendChild(busMap(data.vehicle, data.route));
 	$("main").appendChild(scheduleInfo(data.route));
