@@ -67,8 +67,8 @@ function stopInfo(stop) {
 	const op = (x, cs) =>
 		x.actual
 			? divText(formatDate(x.actual), [...cs, "estimated", "actual"])
-			: x.expected
-				? divText(formatDate(x.expected), [...cs, "estimated", "expected"])
+			: x.estimated
+				? divText(formatDate(x.estimated), [...cs, "estimated", "expected"])
 				: divText("—", [...cs, "estimated"]);
 
 	return [
@@ -106,6 +106,45 @@ function scheduleTitle(route) {
 	return h1;
 }
 
+function busMap(bus, route) {
+	const mapDiv = div([]);
+	mapDiv.id = "map";
+
+	const busCoords = [bus.gps.latitude, bus.gps.longitude];
+	const routeCoords = route.map((stop) => [
+		stop.location.lat,
+		stop.location.lon,
+	]);
+	// Would be better to get the (max - min) / 2 for each axis here,
+	// instead of the average, but the average works.
+	const avgRouteCoord = routeCoords
+		.reduce(([ax, ay], [bx, by]) => [ax + bx, ay + by], [0, 0])
+		.map((c) => c / routeCoords.length);
+
+	let initialised = false;
+	mapDiv.addEventListener("DOMNodeInserted", () => {
+		if (!initialised) {
+			initialised = true;
+			const map = L.map("map").setView(avgRouteCoord, 9);
+			L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+				attribution:
+					'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			}).addTo(map);
+
+			L.marker(busCoords).addTo(map);
+			L.polyline(routeCoords).addTo(map);
+			route.forEach((stop) =>
+				L.circleMarker([stop.location.lat, stop.location.lon], {
+					radius: 5,
+					fillOpacity: 1,
+				}).addTo(map),
+			);
+		}
+	});
+
+	return mapDiv;
+}
+
 async function showTripInfo(tripID) {
 	const data = await get(`https://api.ember.to/v1/trips/${tripID}/`, {
 		all: true,
@@ -114,6 +153,7 @@ async function showTripInfo(tripID) {
 	console.log(data);
 
 	$("main").appendChild(scheduleTitle(data.route));
+	$("main").appendChild(busMap(data.vehicle, data.route));
 	$("main").appendChild(scheduleInfo(data.route));
 }
 

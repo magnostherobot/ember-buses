@@ -10,6 +10,13 @@ h1 {
 	color: #284940;
 }
 
+#map {
+	height: 50vh;
+	width: 50vw;
+	margin: 3em auto;
+	border: 1px solid lightgrey;
+}
+
 .schedule {
 	display: grid;
 	grid-template-columns: 1fr repeat(4, 4em);
@@ -17,6 +24,7 @@ h1 {
 	background: whitesmoke;
 	padding: 20px;
 	border: 1px solid lightgrey;
+	margin-bottom: 4em;
 }
 
 .schedule div {
