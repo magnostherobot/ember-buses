@@ -1,16 +1,20 @@
 body {
 	font-family: "sans-serif";
 	max-width: 45em;
-	min-height: 100vh;
-	margin: 0px auto;
+	min-height: calc(100vh - 3em);
+	margin: 3em auto 0 auto;
 	background-image: linear-gradient(#8ab5a6, #c6dad3);
+}
+
+h1 {
+	color: #284940;
 }
 
 .schedule {
 	display: grid;
 	grid-template-columns: 1fr repeat(4, 4em);
 	line-height: 180%;
-	background: white;
+	background: whitesmoke;
 	padding: 20px;
 	border: 1px solid lightgrey;
 }

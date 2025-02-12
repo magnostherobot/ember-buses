@@ -27,7 +27,7 @@ function getTripID() {
 function createLegLink(leg) {
 	const time = dayjs(leg.departure.scheduled).format("HH:mm");
 	const text = document.createTextNode(
-		`${time} ${leg.origin.detailed_name} to ${leg.destination.detailed_name}`,
+		`${time} ${leg.origin.name} to ${leg.destination.name}`,
 	);
 	const p = document.createElement("p");
 	const link = document.createElement("a");
@@ -72,7 +72,7 @@ function stopInfo(stop) {
 				: divText("—", [...cs, "estimated"]);
 
 	return [
-		divText(stop.location.detailed_name, ["stop-name"]),
+		divText(stop.location.name, ["stop-name"]),
 		divText(formatDate(stop.arrival.scheduled), ["stop-arr", "scheduled"]),
 		divText(formatDate(stop.departure.scheduled), ["stop-dep", "scheduled"]),
 		op(stop.arrival, ["stop-arr"]),
@@ -97,6 +97,15 @@ function scheduleInfo(route) {
 	return div(rows, ["schedule"]);
 }
 
+function scheduleTitle(route) {
+	const regions = route.map((stop) => stop.location.region_name);
+	const time = formatDate(route[0].arrival.scheduled);
+	const title = `${time} ${regions.at(0)} to ${regions.at(-1)}`;
+	const h1 = document.createElement("h1");
+	h1.appendChild(document.createTextNode(title));
+	return h1;
+}
+
 async function showTripInfo(tripID) {
 	const data = await get(`https://api.ember.to/v1/trips/${tripID}/`, {
 		all: true,
@@ -104,6 +113,7 @@ async function showTripInfo(tripID) {
 
 	console.log(data);
 
+	$("main").appendChild(scheduleTitle(data.route));
 	$("main").appendChild(scheduleInfo(data.route));
 }
 
