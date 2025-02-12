@@ -17,7 +17,7 @@ h1 {
 
 #map {
 	height: 50vh;
-	width: 50vw;
+	width: 90%;
 	margin: 3em auto;
 	border: 1px solid lightgrey;
 }
